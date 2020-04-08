@@ -27,7 +27,7 @@
 #                                 socket instead of using TCP.
 #
 #
-FROM phusion/baseimage:0.9.16
+FROM phusion/baseimage:master-amd64
 MAINTAINER Codey Oxley <codey@yelp.com>
 EXPOSE 8000/tcp
 VOLUME ["/config", \
@@ -75,47 +75,44 @@ RUN locale-gen uk_UA.UTF-8
 # Install Observium prereqs
 RUN apt-get update -q && \
     apt-get install -y --no-install-recommends \
-      at \
-      fping \
-      git \
-      graphviz \
-      graphviz \
-      imagemagick \
-      ipmitool \
-      libapache2-mod-php5 \
-      libvirt-bin \
-      mariadb-client \
-      mtr-tiny \
-      nmap \
-      php5-cli \
-      php5-gd \
-      php5-json \
-      php5-ldap \
-      php5-mcrypt \
-      php5-mysql \
-      php5-snmp \
-      php-pear \
-      pwgen \
-      python-mysqldb \
-      rrdcached \
-      rrdtool \
-      snmp \
-      software-properties-common \
-      subversion \
+      # basic system requirements
       unzip \
       wget \
-      whois
+      # extra requirements
+      git \
+      rrdcached \
+      at \
+      ####php7.2-mcrypt \
+      # requirements from docs.observium.org/install_debian
+      libapache2-mod-php7.2 \
+      php7.2-cli \
+      php7.2-mysql \
+      php7.2-mysqli \
+      php7.2-gd \
+      php7.2-json \
+      php-pear \
+      snmp fping \
+      #mysql-server \
+      mysql-client \
+      python-mysqldb \
+      rrdtool \
+      #subversion \
+      whois \
+      mtr-tiny \
+      ipmitool \
+      graphviz \
+      imagemagick \
+      apache2
 
 RUN mkdir -p \
         /config \
         /opt/observium/html \
         /opt/observium/logs \
-        /opt/observium/rrd \
+        /opt/observium/rrd
 
 # === Webserver - Apache + PHP5
 
-RUN php5enmod mcrypt && \
-    a2enmod rewrite
+RUN a2enmod rewrite
 
 RUN mkdir /etc/service/apache2
 COPY bin/service/apache2.sh /etc/service/apache2/run

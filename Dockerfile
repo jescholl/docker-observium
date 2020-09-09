@@ -82,27 +82,31 @@ RUN apt-get update -q && \
       git \
       rrdcached \
       at \
-      ####php7.2-mcrypt \
       # requirements from docs.observium.org/install_debian
-      libapache2-mod-php7.2 \
-      php7.2-cli \
-      php7.2-mysql \
-      php7.2-mysqli \
-      php7.2-gd \
-      php7.2-json \
+      libapache2-mod-php7.4 \
+      php7.4-cli \
+      php7.4-mysql \
+      php7.4-mysqli \
+      php7.4-gd \
+      php7.4-json \
       php-pear \
-      snmp fping \
+      snmp \
+      fping \
       #mysql-server \
       mysql-client \
-      python-mysqldb \
+      python3-mysqldb \
       rrdtool \
-      #subversion \
+      subversion \
       whois \
       mtr-tiny \
-      ipmitool \
+      ipmitool \ 
       graphviz \
       imagemagick \
-      apache2
+      apache2 \
+      python3-pymysql \
+      python-is-python3 \
+    # Clean up APT when done
+    && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 RUN mkdir -p \
         /config \
@@ -110,7 +114,7 @@ RUN mkdir -p \
         /opt/observium/logs \
         /opt/observium/rrd
 
-# === Webserver - Apache + PHP5
+# === Webserver - Apache + PHP
 
 RUN a2enmod rewrite
 
@@ -143,7 +147,3 @@ RUN rm /etc/apache2/sites-available/default-ssl.conf && \
 
 # === Cron and finishing
 COPY cron.d /etc/cron.d/
-
-# === phusion/baseimage post-work
-# Clean up APT when done
-RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
